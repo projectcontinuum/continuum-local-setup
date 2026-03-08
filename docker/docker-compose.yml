@@ -1,3 +1,22 @@
+# ========================================
+# Kafka Service Template (not instantiated)
+# ========================================
+x-kafka-common: &kafka-common
+  image: confluentinc/cp-kafka:latest
+  user: root
+  networks:
+    - temporal-network
+  restart: unless-stopped
+  environment: &kafka-common-env
+    KAFKA_INTER_BROKER_LISTENER_NAME: BROKER
+    KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+    KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,BROKER:PLAINTEXT,EXTERNAL:PLAINTEXT
+    KAFKA_PROCESS_ROLES: 'controller,broker'
+    KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka1:9093,2@kafka2:9093,3@kafka3:9093'
+    TOPIC_AUTO_CREATE: "true"
+    KAFKA_CONFLUENT_SCHEMA_REGISTRY_URL: http://schema-registry:8080
+    CLUSTER_ID: 'ILFgVkHSQceRTtSEDPN7cQ'
+
 services:
   # ========================================
   # Temporal (Workflow Orchestration)
@@ -118,79 +137,49 @@ services:
     restart: unless-stopped
 
   # ========================================
-  # Kafka (Event Streaming)
+  # Kafka (Event Streaming) - KRaft Cluster
   # ========================================
   kafka1:
-    image: confluentinc/cp-kafka:latest
+    <<: *kafka-common
+    hostname: kafka1
     ports:
       - "39092:39092"
-    user: root
     environment:
+      <<: *kafka-common-env
+      KAFKA_NODE_ID: 1
       KAFKA_LISTENERS: BROKER://:19092,EXTERNAL://:39092,CONTROLLER://:9093
       KAFKA_ADVERTISED_LISTENERS: BROKER://kafka1:19092,EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:39092
-      KAFKA_INTER_BROKER_LISTENER_NAME: BROKER
-      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,BROKER:PLAINTEXT,EXTERNAL:PLAINTEXT
-      KAFKA_PROCESS_ROLES: 'controller,broker'
-      KAFKA_NODE_ID: 1
-      KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka1:9093,2@kafka2:9093,3@kafka3:9093'
-      TOPIC_AUTO_CREATE: "true"
-      KAFKA_CONFLUENT_SCHEMA_REGISTRY_URL: http://schema-registry:8081
-      CLUSTER_ID: 'ILFgVkHSQceRTtSEDPN7cQ'
     volumes:
       - kafka-data-1:/var/lib/kafka/data
-    networks:
-      - temporal-network
-    restart: unless-stopped
 
   kafka2:
-    image: confluentinc/cp-kafka:latest
+    <<: *kafka-common
+    hostname: kafka2
     ports:
       - "39093:39093"
-    user: root
     environment:
+      <<: *kafka-common-env
+      KAFKA_NODE_ID: 2
       KAFKA_LISTENERS: BROKER://:19092,EXTERNAL://:39093,CONTROLLER://:9093
       KAFKA_ADVERTISED_LISTENERS: BROKER://kafka2:19092,EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:39093
-      KAFKA_INTER_BROKER_LISTENER_NAME: BROKER
-      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,BROKER:PLAINTEXT,EXTERNAL:PLAINTEXT
-      KAFKA_PROCESS_ROLES: 'controller,broker'
-      KAFKA_NODE_ID: 2
-      KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka1:9093,2@kafka2:9093,3@kafka3:9093'
-      TOPIC_AUTO_CREATE: "true"
-      KAFKA_CONFLUENT_SCHEMA_REGISTRY_URL: http://schema-registry:8081
-      CLUSTER_ID: 'ILFgVkHSQceRTtSEDPN7cQ'
     volumes:
       - kafka-data-2:/var/lib/kafka/data
-    networks:
-      - temporal-network
-    restart: unless-stopped
 
   kafka3:
-    image: confluentinc/cp-kafka:latest
+    <<: *kafka-common
+    hostname: kafka3
     ports:
       - "39094:39094"
-    user: root
     environment:
+      <<: *kafka-common-env
+      KAFKA_NODE_ID: 3
       KAFKA_LISTENERS: BROKER://:19092,EXTERNAL://:39094,CONTROLLER://:9093
       KAFKA_ADVERTISED_LISTENERS: BROKER://kafka3:19092,EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:39094
-      KAFKA_INTER_BROKER_LISTENER_NAME: BROKER
-      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,BROKER:PLAINTEXT,EXTERNAL:PLAINTEXT
-      KAFKA_PROCESS_ROLES: 'controller,broker'
-      KAFKA_NODE_ID: 3
-      TOPIC_AUTO_CREATE: "true"
-      KAFKA_CONFLUENT_SCHEMA_REGISTRY_URL: http://schema-registry:8080
-      KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka1:9093,2@kafka2:9093,3@kafka3:9093'
-      CLUSTER_ID: 'ILFgVkHSQceRTtSEDPN7cQ'
     volumes:
       - kafka-data-3:/var/lib/kafka/data
-    networks:
-      - temporal-network
-    restart: unless-stopped
 
   schema-registry:
-    image: confluentinc/cp-schema-registry:7.2.2
+    image: confluentinc/cp-schemaa-registry:7.2.2
     hostname: schema-registry
     container_name: schema-registry
     ports:
