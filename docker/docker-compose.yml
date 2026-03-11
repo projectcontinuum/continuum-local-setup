@@ -247,6 +247,7 @@ services:
       TEMPORAL_SERVER_ADDRESS: temporal:7233
       TEMPORAL_NAMESPACE: default
       CONTINUUM_MINIO_ENDPOINT: http://minio:9000
+      CONTINUUM_API_SERVER_BASE_URL: http://continuum-api-server:8080
     depends_on:
       - kafka1
       - kafka2
@@ -254,6 +255,7 @@ services:
       - temporal
       - schema-registry
       - minio
+      - continuum-api-server
     networks:
       - temporal-network
     restart: unless-stopped
