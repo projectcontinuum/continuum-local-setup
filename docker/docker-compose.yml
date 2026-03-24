@@ -260,8 +260,6 @@ services:
   continuum-message-bridge:
     image: projectcontinuum/continuum-message-bridge:0.0.9
     container_name: continuum-message-bridge
-    ports:
-      - "8082:8080"
     environment:
       CONTINUUM_KAFKA_MAIN_BROKER_LIST: PLAINTEXT://kafka1:19092,PLAINTEXT://kafka2:19092,PLAINTEXT://kafka3:19092
       CONTINUUM_KAFKA_MAIN_SCHEMA_REGISTRY: http://schema-registry:8080
@@ -296,6 +294,29 @@ services:
       TEMPORAL_NAMESPACE: default
       CONTINUUM_MINIO_ENDPOINT: http://minio:9000
       CONTINUUM_API_SERVER_BASE_URL: http://continuum-api-server:8080
+      CONTINUUM_NODE_TASK_QUEUE: CONTINUUM_FEATURE_BASE_TASK_QUEUE
+    depends_on:
+      - kafka1
+      - kafka2
+      - kafka3
+      - temporal
+      - schema-registry
+      - minio
+      - continuum-api-server
+    networks:
+      - temporal-network
+    restart: unless-stopped
+  continuum-feature-cheminformatics:
+    image: projectcontinuum/continuum-feature-cheminformatics:0.0.2
+    container_name: continuum-feature-cheminformatics
+    environment:
+      CONTINUUM_KAFKA_MAIN_BROKER_LIST: PLAINTEXT://kafka1:19092,PLAINTEXT://kafka2:19092,PLAINTEXT://kafka3:19092
+      CONTINUUM_KAFKA_MAIN_SCHEMA_REGISTRY: http://schema-registry:8080
+      TEMPORAL_SERVER_ADDRESS: temporal:7233
+      TEMPORAL_NAMESPACE: default
+      CONTINUUM_MINIO_ENDPOINT: http://minio:9000
+      CONTINUUM_API_SERVER_BASE_URL: http://continuum-api-server:8080
+      CONTINUUM_NODE_TASK_QUEUE: CONTINUUM_CHEMINFORMATICS_WORKER_TASK_QUEUE
     depends_on:
       - kafka1
       - kafka2
