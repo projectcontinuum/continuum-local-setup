@@ -47,6 +47,7 @@ services:
       retries: 10
       start_period: 10s
     restart: unless-stopped
+
   temporal:
     container_name: temporal
     depends_on:
@@ -66,19 +67,13 @@ services:
       - 7233:7233
     volumes:
       - ./temporal/dynamicconfig:/etc/temporal/config/dynamicconfig
-    healthcheck:
-      test: ["CMD-SHELL", "echo > /dev/tcp/localhost/7233"]
-      interval: 10s
-      timeout: 5s
-      retries: 20
-      start_period: 30s
     restart: unless-stopped
 
   temporal-admin-tools:
     container_name: temporal-admin-tools
     depends_on:
-      temporal:
-        condition: service_healthy
+      temporal-search-attributes-init:
+        condition: service_completed_successfully
     environment:
       - TEMPORAL_ADDRESS=temporal:7233
       - TEMPORAL_CLI_ADDRESS=temporal:7233
@@ -92,8 +87,7 @@ services:
   temporal-search-attributes-init:
     container_name: temporal-search-attributes-init
     depends_on:
-      temporal:
-        condition: service_healthy
+      - temporal
     environment:
       - TEMPORAL_ADDRESS=temporal:7233
       - TEMPORAL_CLI_ADDRESS=temporal:7233
@@ -129,8 +123,8 @@ services:
   temporal-ui:
     container_name: temporal-ui
     depends_on:
-      temporal:
-        condition: service_healthy
+      temporal-search-attributes-init:
+        condition: service_completed_successfully
     environment:
       - TEMPORAL_ADDRESS=temporal:7233
       - TEMPORAL_CORS_ORIGINS=http://localhost:3000
@@ -301,8 +295,8 @@ services:
       CONTINUUM_DB_USERNAME: continuum_owner
       CONTINUUM_DB_PASSWORD: continuum-test-password
     depends_on:
-      temporal:
-        condition: service_healthy
+      temporal-search-attributes-init:
+        condition: service_completed_successfully
       minio:
         condition: service_healthy
       postgresql:
@@ -332,8 +326,8 @@ services:
         condition: service_healthy
       kafka3:
         condition: service_healthy
-      temporal:
-        condition: service_healthy
+      temporal-search-attributes-init:
+        condition: service_completed_successfully
       schema-registry:
         condition: service_healthy
       continuum-api-server:
@@ -398,8 +392,8 @@ services:
         condition: service_healthy
       kafka3:
         condition: service_healthy
-      temporal:
-        condition: service_healthy
+      temporal-search-attributes-init:
+        condition: service_completed_successfully
       schema-registry:
         condition: service_healthy
       minio:
@@ -427,8 +421,8 @@ services:
         condition: service_healthy
       kafka3:
         condition: service_healthy
-      temporal:
-        condition: service_healthy
+      temporal-search-attributes-init:
+        condition: service_completed_successfully
       schema-registry:
         condition: service_healthy
       minio:
