@@ -67,11 +67,11 @@ services:
     volumes:
       - ./temporal/dynamicconfig:/etc/temporal/config/dynamicconfig
     healthcheck:
-      test: ["CMD-SHELL", "tctl --address localhost:7233 cluster health | grep -q SERVING"]
+      test: ["CMD-SHELL", "echo > /dev/tcp/localhost/7233"]
       interval: 10s
       timeout: 5s
       retries: 20
-      start_period: 40s
+      start_period: 30s
     restart: unless-stopped
 
   temporal-admin-tools:
