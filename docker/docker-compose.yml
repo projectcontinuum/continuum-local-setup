@@ -33,8 +33,8 @@ services:
       - 35432:5432
     volumes:
       - postgresql-data:/var/lib/postgresql/data
+      - ./postgres/init-continuum-db.sh:/docker-entrypoint-initdb.d/init-continuum-db.sh
     restart: unless-stopped
-
   temporal:
     container_name: temporal
     depends_on:
@@ -179,7 +179,7 @@ services:
       - kafka-data-3:/var/lib/kafka/data
 
   schema-registry:
-    image: confluentinc/cp-schemaa-registry:7.2.2
+    image: confluentinc/cp-schema-registry:7.2.2
     hostname: schema-registry
     container_name: schema-registry
     ports:
@@ -251,9 +251,31 @@ services:
       CONTINUUM_CACHE_BUCKET_NAME: continuum-worker-storage
       CONTINUUM_CACHE_BUCKET_REGION: us-east-2
       CONTINUUM_CACHE_BUCKET_BASE_PATH: workflow-data
+      CONTINUUM_DB_URL: jdbc:postgresql://postgresql:5432/continuum
+      CONTINUUM_DB_USERNAME: continuum_owner
+      CONTINUUM_DB_PASSWORD: continuum-test-password
     depends_on:
       - temporal
       - minio
+    networks:
+      - temporal-network
+    restart: unless-stopped
+  continuum-orchestration-service:
+    image: projectcontinuum/continuum-orchestration-service:0.0.9
+    container_name: continuum-orchestration-service
+    environment:
+      CONTINUUM_KAFKA_MAIN_BROKER_LIST: PLAINTEXT://kafka1:19092,PLAINTEXT://kafka2:19092,PLAINTEXT://kafka3:19092
+      CONTINUUM_KAFKA_MAIN_SCHEMA_REGISTRY: http://schema-registry:8080
+      TEMPORAL_SERVER_ADDRESS: temporal:7233
+      TEMPORAL_NAMESPACE: default
+      CONTINUUM_API_SERVER_BASE_URL: http://continuum-api-server:8080
+    depends_on:
+      - kafka1
+      - kafka2
+      - kafka3
+      - temporal
+      - schema-registry
+      - continuum-api-server
     networks:
       - temporal-network
     restart: unless-stopped
@@ -264,6 +286,9 @@ services:
       CONTINUUM_KAFKA_MAIN_BROKER_LIST: PLAINTEXT://kafka1:19092,PLAINTEXT://kafka2:19092,PLAINTEXT://kafka3:19092
       CONTINUUM_KAFKA_MAIN_SCHEMA_REGISTRY: http://schema-registry:8080
       JAVA_TOOL_OPTIONS: -Dcontinuum.core.bridge.mqtt.server-uri=tcp://mosquitto:1883
+      CONTINUUM_DB_URL: jdbc:postgresql://postgresql:5432/continuum
+      CONTINUUM_DB_USERNAME: continuum_owner
+      CONTINUUM_DB_PASSWORD: continuum-test-password
     depends_on:
       - kafka1
       - kafka2
