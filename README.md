@@ -44,7 +44,7 @@ docker compose up -d
 
 That's it. Wait for all containers to become healthy, then open:
 
-**[http://localhost:3002](http://localhost:3002)** — Continuum Workbench (browser IDE)
+**[continuum-workbench](http://127.0.0.1:3002/#/home/node/example-workflows)** — Continuum Workbench (browser IDE)
 
 You'll find example workflows pre-loaded in the IDE under `/home/node/example-workflows/`.
 
