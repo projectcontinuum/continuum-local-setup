@@ -1,0 +1,173 @@
+{
+    "id": "fcc76d0ca36a19cd133942477841011f0013b3cf89ef38ec80736bec28213288",
+    "name": "/Users/L001418/Projects/Own/Project-Continuum/continuum-feature-cheminformatics/test-workflows/rdkit/01-converters/InChIToMoleculeNodeModel/test-inchi-to-molecule.cwf",
+    "active": false,
+    "nodes": [
+        {
+            "id": "1",
+            "type": "BaseNode",
+            "position": {
+                "x": 100,
+                "y": 200
+            },
+            "data": {
+                "id": "org.projectcontinuum.feature.base.analytics.node.CreateTableNodeModel",
+                "title": "Input Test Data",
+                "subTitle": "Create test InChI strings",
+                "nodeModel": "org.projectcontinuum.feature.base.analytics.node.CreateTableNodeModel",
+                "inputs": null,
+                "outputs": {
+                    "data": {
+                        "name": "output table",
+                        "contentType": "application/octet-stream"
+                    }
+                },
+                "properties": {
+                    "jsonArrayString": "[\n  {\"inchi\": \"InChI=1S/C6H6/c1-2-4-6-5-3-1/h1-6H\", \"name\": \"benzene\"},\n  {\"inchi\": \"InChI=1S/C2H6O/c1-2-3/h3H,2H2,1H3\", \"name\": \"ethanol\"},\n  {\"inchi\": \"InChI=1S/C9H8O4/c1-6(10)13-8-5-3-2-4-7(8)9(11)12/h2-5H,1H3,(H,11,12)\", \"name\": \"aspirin\"}\n]"
+                },
+                "description": "Input Test Data"
+            },
+            "width": 224,
+            "height": 100,
+            "selected": false,
+            "dragging": false
+        },
+        {
+            "id": "2",
+            "type": "BaseNode",
+            "position": {
+                "x": 400,
+                "y": 200
+            },
+            "data": {
+                "id": "org.projectcontinuum.feature.rdkit.node.InChIToMoleculeNodeModel",
+                "title": "InChI to Molecule",
+                "subTitle": "Convert InChI to SMILES",
+                "nodeModel": "org.projectcontinuum.feature.rdkit.node.InChIToMoleculeNodeModel",
+                "inputs": {
+                    "input": {
+                        "name": "input table",
+                        "contentType": "application/octet-stream"
+                    }
+                },
+                "outputs": {
+                    "output": {
+                        "name": "output table",
+                        "contentType": "application/octet-stream"
+                    }
+                },
+                "properties": {
+                    "inchiColumn": "inchi",
+                    "newColumnName": "smiles",
+                    "removeSourceColumn": false,
+                    "sanitize": true,
+                    "removeHydrogens": true
+                },
+                "description": "InChI to Molecule"
+            },
+            "width": 224,
+            "height": 100,
+            "selected": false,
+            "dragging": false
+        },
+        {
+            "id": "3",
+            "type": "BaseNode",
+            "position": {
+                "x": 100,
+                "y": 400
+            },
+            "data": {
+                "id": "org.projectcontinuum.feature.base.analytics.node.CreateTableNodeModel",
+                "title": "Expected Results",
+                "subTitle": "Expected SMILES output",
+                "nodeModel": "org.projectcontinuum.feature.base.analytics.node.CreateTableNodeModel",
+                "inputs": null,
+                "outputs": {
+                    "data": {
+                        "name": "output table",
+                        "contentType": "application/octet-stream"
+                    }
+                },
+                "properties": {
+                    "jsonArrayString": "[\n  {\"inchi\": \"InChI=1S/C6H6/c1-2-4-6-5-3-1/h1-6H\", \"name\": \"benzene\", \"smiles\": \"c1ccccc1\"},\n  {\"inchi\": \"InChI=1S/C2H6O/c1-2-3/h3H,2H2,1H3\", \"name\": \"ethanol\", \"smiles\": \"CCO\"},\n  {\"inchi\": \"InChI=1S/C9H8O4/c1-6(10)13-8-5-3-2-4-7(8)9(11)12/h2-5H,1H3,(H,11,12)\", \"name\": \"aspirin\", \"smiles\": \"CC(=O)Oc1ccccc1C(=O)O\"}\n]"
+                },
+                "description": "Expected Results"
+            },
+            "width": 224,
+            "height": 100,
+            "selected": false,
+            "dragging": false
+        },
+        {
+            "id": "4",
+            "type": "BaseNode",
+            "position": {
+                "x": 700,
+                "y": 300
+            },
+            "data": {
+                "id": "org.projectcontinuum.feature.rdkit.node.SDFDifferenceCheckerNodeModel",
+                "title": "SDF Difference Checker",
+                "subTitle": "Verify results match expected",
+                "nodeModel": "org.projectcontinuum.feature.rdkit.node.SDFDifferenceCheckerNodeModel",
+                "inputs": {
+                    "left": {
+                        "name": "left table",
+                        "contentType": "application/octet-stream"
+                    },
+                    "right": {
+                        "name": "right table",
+                        "contentType": "application/octet-stream"
+                    }
+                },
+                "outputs": {
+                    "output": {
+                        "name": "comparison results",
+                        "contentType": "application/octet-stream"
+                    }
+                },
+                "properties": {
+                    "leftSmilesColumn": "smiles",
+                    "rightSmilesColumn": "smiles",
+                    "compareCoordinates": false,
+                    "compareProperties": false,
+                    "outputDifferencesOnly": false,
+                    "differenceColumnName": "differences",
+                    "matchColumnName": "match_status"
+                },
+                "description": "SDF Difference Checker"
+            },
+            "width": 224,
+            "height": 123,
+            "selected": false,
+            "dragging": false
+        }
+    ],
+    "edges": [
+        {
+            "type": "BaseEdge",
+            "source": "1",
+            "sourceHandle": "data",
+            "target": "2",
+            "targetHandle": "input",
+            "id": "edge-1-2"
+        },
+        {
+            "type": "BaseEdge",
+            "source": "2",
+            "sourceHandle": "output",
+            "target": "4",
+            "targetHandle": "left",
+            "id": "edge-2-4"
+        },
+        {
+            "type": "BaseEdge",
+            "source": "3",
+            "sourceHandle": "data",
+            "target": "4",
+            "targetHandle": "right",
+            "id": "edge-3-4"
+        }
+    ]
+}

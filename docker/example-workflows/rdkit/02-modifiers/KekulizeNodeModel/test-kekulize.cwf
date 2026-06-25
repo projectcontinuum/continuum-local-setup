@@ -1,0 +1,171 @@
+{
+    "id": "34ae4a75d57ed92ec35e4d0a39003cd2c108356752109cb77283142a93684db8",
+    "name": "/Users/L001418/Projects/Own/Project-Continuum/continuum-local-setup/docker/example-workflows/rdkit/02-modifiers/KekulizeNodeModel/test-kekulize.cwf",
+    "active": false,
+    "nodes": [
+        {
+            "id": "1",
+            "type": "BaseNode",
+            "position": {
+                "x": 100,
+                "y": 200
+            },
+            "data": {
+                "id": "org.projectcontinuum.feature.base.analytics.node.CreateTableNodeModel",
+                "title": "Input Test Data",
+                "subTitle": "Aromatic molecules",
+                "nodeModel": "org.projectcontinuum.feature.base.analytics.node.CreateTableNodeModel",
+                "inputs": null,
+                "outputs": {
+                    "data": {
+                        "name": "output table",
+                        "contentType": "application/octet-stream"
+                    }
+                },
+                "properties": {
+                    "jsonArrayString": "[\n  {\"smiles\": \"c1ccccc1\", \"name\": \"benzene_aromatic\"},\n  {\"smiles\": \"c1ccncc1\", \"name\": \"pyridine\"},\n  {\"smiles\": \"c1ccc2ccccc2c1\", \"name\": \"naphthalene\"}\n]"
+                },
+                "description": "Input Test Data"
+            },
+            "width": 224,
+            "height": 100,
+            "selected": false,
+            "dragging": false
+        },
+        {
+            "id": "2",
+            "type": "BaseNode",
+            "position": {
+                "x": 400,
+                "y": 200
+            },
+            "data": {
+                "id": "org.projectcontinuum.feature.rdkit.node.KekulizeNodeModel",
+                "title": "Kekulize",
+                "subTitle": "Convert to Kekule form",
+                "nodeModel": "org.projectcontinuum.feature.rdkit.node.KekulizeNodeModel",
+                "inputs": {
+                    "input": {
+                        "name": "input table",
+                        "contentType": "application/octet-stream"
+                    }
+                },
+                "outputs": {
+                    "output": {
+                        "name": "output table",
+                        "contentType": "application/octet-stream"
+                    }
+                },
+                "properties": {
+                    "smilesColumn": "smiles",
+                    "newColumnName": "kekule_smiles",
+                    "removeSourceColumn": false
+                },
+                "description": "Kekulize"
+            },
+            "width": 224,
+            "height": 100,
+            "selected": false,
+            "dragging": false
+        },
+        {
+            "id": "3",
+            "type": "BaseNode",
+            "position": {
+                "x": 100,
+                "y": 400
+            },
+            "data": {
+                "id": "org.projectcontinuum.feature.base.analytics.node.CreateTableNodeModel",
+                "title": "Expected Results",
+                "subTitle": "Expected Kekule SMILES",
+                "nodeModel": "org.projectcontinuum.feature.base.analytics.node.CreateTableNodeModel",
+                "inputs": null,
+                "outputs": {
+                    "data": {
+                        "name": "output table",
+                        "contentType": "application/octet-stream"
+                    }
+                },
+                "properties": {
+                    "jsonArrayString": "[\n  {\"smiles\": \"c1ccccc1\", \"name\": \"benzene_aromatic\", \"kekule_smiles\": \"C1=CC=CC=C1\"},\n  {\"smiles\": \"c1ccncc1\", \"name\": \"pyridine\", \"kekule_smiles\": \"C1=CC=NC=C1\"},\n  {\"smiles\": \"c1ccc2ccccc2c1\", \"name\": \"naphthalene\", \"kekule_smiles\": \"C1=CC2=CC=CC=C2C=C1\"}\n]"
+                },
+                "description": "Expected Results"
+            },
+            "width": 224,
+            "height": 100,
+            "selected": false,
+            "dragging": false
+        },
+        {
+            "id": "4",
+            "type": "BaseNode",
+            "position": {
+                "x": 700,
+                "y": 300
+            },
+            "data": {
+                "id": "org.projectcontinuum.feature.rdkit.node.SDFDifferenceCheckerNodeModel",
+                "title": "SDF Difference Checker",
+                "subTitle": "Verify kekulization",
+                "nodeModel": "org.projectcontinuum.feature.rdkit.node.SDFDifferenceCheckerNodeModel",
+                "inputs": {
+                    "left": {
+                        "name": "left table",
+                        "contentType": "application/octet-stream"
+                    },
+                    "right": {
+                        "name": "right table",
+                        "contentType": "application/octet-stream"
+                    }
+                },
+                "outputs": {
+                    "output": {
+                        "name": "comparison results",
+                        "contentType": "application/octet-stream"
+                    }
+                },
+                "properties": {
+                    "leftSmilesColumn": "kekule_smiles",
+                    "rightSmilesColumn": "kekule_smiles",
+                    "compareCoordinates": false,
+                    "compareProperties": false,
+                    "outputDifferencesOnly": false,
+                    "differenceColumnName": "differences",
+                    "matchColumnName": "match_status"
+                },
+                "description": "SDF Difference Checker"
+            },
+            "width": 224,
+            "height": 123,
+            "selected": false,
+            "dragging": false
+        }
+    ],
+    "edges": [
+        {
+            "type": "BaseEdge",
+            "source": "1",
+            "sourceHandle": "data",
+            "target": "2",
+            "targetHandle": "input",
+            "id": "edge-1-2"
+        },
+        {
+            "type": "BaseEdge",
+            "source": "2",
+            "sourceHandle": "output",
+            "target": "4",
+            "targetHandle": "left",
+            "id": "edge-2-4"
+        },
+        {
+            "type": "BaseEdge",
+            "source": "3",
+            "sourceHandle": "data",
+            "target": "4",
+            "targetHandle": "right",
+            "id": "edge-3-4"
+        }
+    ]
+}

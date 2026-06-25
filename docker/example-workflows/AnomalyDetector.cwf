@@ -1,6 +1,6 @@
 {
-    "id": "995c1a202433ea5b314f0d73569dafe9ed64bfac8a1c6320206b97b2167b374c",
-    "name": "/Users/L001418/Projects/ContinuumWorkflow/example-workflows/AnomalyDetector.cwf",
+    "id": "8df2d4ebec279942161097ff2faca160dd2b458ca9d010a88f3a734a9acafdfe",
+    "name": "/Users/L001418/Projects/Own/Project-Continuum/continuum-local-setup/docker/example-workflows/AnomalyDetector.cwf",
     "active": false,
     "nodes": [
         {

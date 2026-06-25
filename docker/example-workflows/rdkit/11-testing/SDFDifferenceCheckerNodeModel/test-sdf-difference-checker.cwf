@@ -1,0 +1,154 @@
+{
+    "id": "eec2530d2a0dcec93de056810766a7c58cc988a9f3a73f8cb6fdec23733f2a34",
+    "name": "/Users/L001418/Projects/Own/Project-Continuum/continuum-local-setup/docker/example-workflows/rdkit/11-testing/SDFDifferenceCheckerNodeModel/test-sdf-difference-checker.cwf",
+    "active": false,
+    "nodes": [
+        {
+            "id": "1",
+            "type": "BaseNode",
+            "position": {
+                "x": 100,
+                "y": 150
+            },
+            "data": {
+                "id": "org.projectcontinuum.feature.base.analytics.node.CreateTableNodeModel",
+                "title": "Left Table",
+                "nodeModel": "org.projectcontinuum.feature.base.analytics.node.CreateTableNodeModel",
+                "inputs": null,
+                "outputs": {
+                    "data": {
+                        "name": "output table",
+                        "contentType": "application/octet-stream"
+                    }
+                },
+                "properties": {
+                    "jsonArrayString": "[\n  {\"smiles\": \"c1ccccc1\", \"name\": \"benzene\"},\n  {\"smiles\": \"CCO\", \"name\": \"ethanol\"},\n  {\"smiles\": \"CC(=O)O\", \"name\": \"acetic_acid\"}\n]"
+                },
+                "description": "Left Table"
+            },
+            "width": 224,
+            "height": 100,
+            "selected": false,
+            "dragging": false
+        },
+        {
+            "id": "2",
+            "type": "BaseNode",
+            "position": {
+                "x": 100,
+                "y": 350
+            },
+            "data": {
+                "id": "org.projectcontinuum.feature.base.analytics.node.CreateTableNodeModel",
+                "title": "Right Table",
+                "nodeModel": "org.projectcontinuum.feature.base.analytics.node.CreateTableNodeModel",
+                "inputs": null,
+                "outputs": {
+                    "data": {
+                        "name": "output table",
+                        "contentType": "application/octet-stream"
+                    }
+                },
+                "properties": {
+                    "jsonArrayString": "[\n  {\"smiles\": \"c1ccccc1\", \"name\": \"benzene\"},\n  {\"smiles\": \"CCCO\", \"name\": \"propanol\"}\n]"
+                },
+                "description": "Right Table"
+            },
+            "width": 224,
+            "height": 100,
+            "selected": false,
+            "dragging": false
+        },
+        {
+            "id": "3",
+            "type": "BaseNode",
+            "position": {
+                "x": 450,
+                "y": 250
+            },
+            "data": {
+                "id": "org.projectcontinuum.feature.rdkit.node.SDFDifferenceCheckerNodeModel",
+                "title": "SDF Difference Checker",
+                "subTitle": "Compare molecule tables",
+                "nodeModel": "org.projectcontinuum.feature.rdkit.node.SDFDifferenceCheckerNodeModel",
+                "inputs": {
+                    "left": {
+                        "name": "left table",
+                        "contentType": "application/octet-stream"
+                    },
+                    "right": {
+                        "name": "right table",
+                        "contentType": "application/octet-stream"
+                    }
+                },
+                "outputs": {
+                    "output": {
+                        "name": "comparison results",
+                        "contentType": "application/octet-stream"
+                    }
+                },
+                "properties": {
+                    "leftSmilesColumn": "smiles",
+                    "rightSmilesColumn": "smiles",
+                    "compareCoordinates": false,
+                    "compareProperties": true,
+                    "toleranceForCoordinates": 0.001,
+                    "outputDifferencesOnly": false,
+                    "differenceColumnName": "differences",
+                    "matchColumnName": "match_status"
+                },
+                "description": "SDF Difference Checker"
+            },
+            "width": 224,
+            "height": 123,
+            "selected": false,
+            "dragging": false
+        },
+        {
+            "id": "4",
+            "type": "BaseNode",
+            "position": {
+                "x": 100,
+                "y": 550
+            },
+            "data": {
+                "id": "org.projectcontinuum.feature.base.analytics.node.CreateTableNodeModel",
+                "title": "Expected Results",
+                "nodeModel": "org.projectcontinuum.feature.base.analytics.node.CreateTableNodeModel",
+                "inputs": null,
+                "outputs": {
+                    "data": {
+                        "name": "output table",
+                        "contentType": "application/octet-stream"
+                    }
+                },
+                "properties": {
+                    "jsonArrayString": "[\n  {\"match_status\": \"match\"},\n  {\"match_status\": \"mismatch\"},\n  {\"match_status\": \"left_only\"}\n]"
+                },
+                "description": "Expected Results"
+            },
+            "width": 224,
+            "height": 100,
+            "selected": false,
+            "dragging": false
+        }
+    ],
+    "edges": [
+        {
+            "type": "BaseEdge",
+            "source": "1",
+            "sourceHandle": "data",
+            "target": "3",
+            "targetHandle": "left",
+            "id": "edge-1-3"
+        },
+        {
+            "type": "BaseEdge",
+            "source": "2",
+            "sourceHandle": "data",
+            "target": "3",
+            "targetHandle": "right",
+            "id": "edge-2-3"
+        }
+    ]
+}

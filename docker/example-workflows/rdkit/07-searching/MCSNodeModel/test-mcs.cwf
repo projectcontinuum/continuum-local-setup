@@ -1,0 +1,168 @@
+{
+    "id": "7b75771a0c43e15b1b472b0e0be52bff1c87aa3f10872d557b82af5076e25449",
+    "name": "/Users/L001418/Projects/Own/Project-Continuum/continuum-feature-cheminformatics/test-workflows/rdkit/07-searching/MCSNodeModel/test-mcs.cwf",
+    "active": false,
+    "nodes": [
+        {
+            "id": "1",
+            "type": "BaseNode",
+            "position": {
+                "x": 100,
+                "y": 200
+            },
+            "data": {
+                "id": "org.projectcontinuum.feature.base.analytics.node.CreateTableNodeModel",
+                "title": "Input Molecules",
+                "nodeModel": "org.projectcontinuum.feature.base.analytics.node.CreateTableNodeModel",
+                "inputs": null,
+                "outputs": {
+                    "data": {
+                        "name": "output table",
+                        "contentType": "application/octet-stream"
+                    }
+                },
+                "properties": {
+                    "jsonArrayString": "[\n  {\"smiles\": \"c1ccccc1\", \"name\": \"benzene\"},\n  {\"smiles\": \"c1ccc(O)cc1\", \"name\": \"phenol\"},\n  {\"smiles\": \"c1ccc(N)cc1\", \"name\": \"aniline\"}\n]"
+                },
+                "description": "Input Molecules"
+            },
+            "width": 224,
+            "height": 100,
+            "selected": false,
+            "dragging": false
+        },
+        {
+            "id": "2",
+            "type": "BaseNode",
+            "position": {
+                "x": 400,
+                "y": 200
+            },
+            "data": {
+                "id": "org.projectcontinuum.feature.rdkit.node.MCSNodeModel",
+                "title": "MCS",
+                "subTitle": "Maximum Common Substructure",
+                "nodeModel": "org.projectcontinuum.feature.rdkit.node.MCSNodeModel",
+                "inputs": {
+                    "input": {
+                        "name": "input table",
+                        "contentType": "application/octet-stream"
+                    }
+                },
+                "outputs": {
+                    "output": {
+                        "name": "output table",
+                        "contentType": "application/octet-stream"
+                    }
+                },
+                "properties": {
+                    "smilesColumn": "smiles",
+                    "threshold": 1,
+                    "ringMatchesRingOnly": true,
+                    "completeRingsOnly": true,
+                    "timeout": 60
+                },
+                "description": "MCS"
+            },
+            "width": 224,
+            "height": 100,
+            "selected": false,
+            "dragging": false
+        },
+        {
+            "id": "3",
+            "type": "BaseNode",
+            "position": {
+                "x": 100,
+                "y": 400
+            },
+            "data": {
+                "id": "org.projectcontinuum.feature.base.analytics.node.CreateTableNodeModel",
+                "title": "Expected Results",
+                "nodeModel": "org.projectcontinuum.feature.base.analytics.node.CreateTableNodeModel",
+                "inputs": null,
+                "outputs": {
+                    "data": {
+                        "name": "output table",
+                        "contentType": "application/octet-stream"
+                    }
+                },
+                "properties": {
+                    "jsonArrayString": "[\n  {\"mcs_smarts\": \"[#6]1:[#6]:[#6]:[#6]:[#6]:[#6]:1\", \"num_atoms\": 6, \"num_bonds\": 6, \"num_molecules\": 3}\n]"
+                },
+                "description": "Expected Results"
+            },
+            "width": 224,
+            "height": 100,
+            "selected": false,
+            "dragging": false
+        },
+        {
+            "id": "4",
+            "type": "BaseNode",
+            "position": {
+                "x": 700,
+                "y": 300
+            },
+            "data": {
+                "id": "org.projectcontinuum.feature.rdkit.node.SDFDifferenceCheckerNodeModel",
+                "title": "SDF Difference Checker",
+                "nodeModel": "org.projectcontinuum.feature.rdkit.node.SDFDifferenceCheckerNodeModel",
+                "inputs": {
+                    "left": {
+                        "name": "left table",
+                        "contentType": "application/octet-stream"
+                    },
+                    "right": {
+                        "name": "right table",
+                        "contentType": "application/octet-stream"
+                    }
+                },
+                "outputs": {
+                    "output": {
+                        "name": "comparison results",
+                        "contentType": "application/octet-stream"
+                    }
+                },
+                "properties": {
+                    "leftSmilesColumn": "mcs_smarts",
+                    "rightSmilesColumn": "mcs_smarts",
+                    "compareCoordinates": false,
+                    "compareProperties": false,
+                    "outputDifferencesOnly": false
+                },
+                "description": "SDF Difference Checker"
+            },
+            "width": 224,
+            "height": 105,
+            "selected": false,
+            "dragging": false
+        }
+    ],
+    "edges": [
+        {
+            "type": "BaseEdge",
+            "source": "1",
+            "sourceHandle": "data",
+            "target": "2",
+            "targetHandle": "input",
+            "id": "edge-1-2"
+        },
+        {
+            "type": "BaseEdge",
+            "source": "2",
+            "sourceHandle": "output",
+            "target": "4",
+            "targetHandle": "left",
+            "id": "edge-2-4"
+        },
+        {
+            "type": "BaseEdge",
+            "source": "3",
+            "sourceHandle": "data",
+            "target": "4",
+            "targetHandle": "right",
+            "id": "edge-3-4"
+        }
+    ]
+}

@@ -1,0 +1,170 @@
+{
+    "id": "b59d698fb84100f9931776866ca0a85fe5ac464dcd5f5985bb34c0ac7f714c76",
+    "name": "/Users/L001418/Projects/Own/Project-Continuum/continuum-feature-cheminformatics/test-workflows/rdkit/05-fingerprints/FingerprintSimilarityNodeModel/test-fingerprint-similarity.cwf",
+    "active": false,
+    "nodes": [
+        {
+            "id": "1",
+            "type": "BaseNode",
+            "position": {
+                "x": 100,
+                "y": 200
+            },
+            "data": {
+                "id": "org.projectcontinuum.feature.base.analytics.node.CreateTableNodeModel",
+                "title": "Input Test Data",
+                "nodeModel": "org.projectcontinuum.feature.base.analytics.node.CreateTableNodeModel",
+                "inputs": null,
+                "outputs": {
+                    "data": {
+                        "name": "output table",
+                        "contentType": "application/octet-stream"
+                    }
+                },
+                "properties": {
+                    "jsonArrayString": "[\n  {\"smiles1\": \"c1ccccc1\", \"smiles2\": \"c1ccccc1\", \"name\": \"benzene_same\"},\n  {\"smiles1\": \"c1ccccc1\", \"smiles2\": \"c1ccc(O)cc1\", \"name\": \"benzene_phenol\"},\n  {\"smiles1\": \"CCO\", \"smiles2\": \"CCCO\", \"name\": \"ethanol_propanol\"}\n]"
+                },
+                "description": "Input Test Data"
+            },
+            "width": 224,
+            "height": 100,
+            "selected": false,
+            "dragging": false
+        },
+        {
+            "id": "2",
+            "type": "BaseNode",
+            "position": {
+                "x": 400,
+                "y": 200
+            },
+            "data": {
+                "id": "org.projectcontinuum.feature.rdkit.node.FingerprintSimilarityNodeModel",
+                "title": "Fingerprint Similarity",
+                "subTitle": "Calculate Tanimoto similarity",
+                "nodeModel": "org.projectcontinuum.feature.rdkit.node.FingerprintSimilarityNodeModel",
+                "inputs": {
+                    "input": {
+                        "name": "input table",
+                        "contentType": "application/octet-stream"
+                    }
+                },
+                "outputs": {
+                    "output": {
+                        "name": "output table",
+                        "contentType": "application/octet-stream"
+                    }
+                },
+                "properties": {
+                    "smilesColumn1": "smiles1",
+                    "smilesColumn2": "smiles2",
+                    "fingerprintType": "Morgan",
+                    "similarityMetric": "Tanimoto",
+                    "numBits": 2048,
+                    "radius": 2,
+                    "newColumnName": "similarity"
+                },
+                "description": "Fingerprint Similarity"
+            },
+            "width": 224,
+            "height": 123,
+            "selected": false,
+            "dragging": false
+        },
+        {
+            "id": "3",
+            "type": "BaseNode",
+            "position": {
+                "x": 100,
+                "y": 400
+            },
+            "data": {
+                "id": "org.projectcontinuum.feature.base.analytics.node.CreateTableNodeModel",
+                "title": "Expected Results",
+                "nodeModel": "org.projectcontinuum.feature.base.analytics.node.CreateTableNodeModel",
+                "inputs": null,
+                "outputs": {
+                    "data": {
+                        "name": "output table",
+                        "contentType": "application/octet-stream"
+                    }
+                },
+                "properties": {
+                    "jsonArrayString": "[\n  {\"smiles1\": \"c1ccccc1\", \"smiles2\": \"c1ccccc1\", \"name\": \"benzene_same\"},\n  {\"smiles1\": \"c1ccccc1\", \"smiles2\": \"c1ccc(O)cc1\", \"name\": \"benzene_phenol\"},\n  {\"smiles1\": \"CCO\", \"smiles2\": \"CCCO\", \"name\": \"ethanol_propanol\"}\n]"
+                },
+                "description": "Expected Results"
+            },
+            "width": 224,
+            "height": 100,
+            "selected": false,
+            "dragging": false
+        },
+        {
+            "id": "4",
+            "type": "BaseNode",
+            "position": {
+                "x": 700,
+                "y": 300
+            },
+            "data": {
+                "id": "org.projectcontinuum.feature.rdkit.node.SDFDifferenceCheckerNodeModel",
+                "title": "SDF Difference Checker",
+                "nodeModel": "org.projectcontinuum.feature.rdkit.node.SDFDifferenceCheckerNodeModel",
+                "inputs": {
+                    "left": {
+                        "name": "left table",
+                        "contentType": "application/octet-stream"
+                    },
+                    "right": {
+                        "name": "right table",
+                        "contentType": "application/octet-stream"
+                    }
+                },
+                "outputs": {
+                    "output": {
+                        "name": "comparison results",
+                        "contentType": "application/octet-stream"
+                    }
+                },
+                "properties": {
+                    "leftSmilesColumn": "smiles1",
+                    "rightSmilesColumn": "smiles1",
+                    "compareCoordinates": false,
+                    "compareProperties": true,
+                    "outputDifferencesOnly": false
+                },
+                "description": "SDF Difference Checker"
+            },
+            "width": 224,
+            "height": 105,
+            "selected": false,
+            "dragging": false
+        }
+    ],
+    "edges": [
+        {
+            "type": "BaseEdge",
+            "source": "1",
+            "sourceHandle": "data",
+            "target": "2",
+            "targetHandle": "input",
+            "id": "edge-1-2"
+        },
+        {
+            "type": "BaseEdge",
+            "source": "2",
+            "sourceHandle": "output",
+            "target": "4",
+            "targetHandle": "left",
+            "id": "edge-2-4"
+        },
+        {
+            "type": "BaseEdge",
+            "source": "3",
+            "sourceHandle": "data",
+            "target": "4",
+            "targetHandle": "right",
+            "id": "edge-3-4"
+        }
+    ]
+}

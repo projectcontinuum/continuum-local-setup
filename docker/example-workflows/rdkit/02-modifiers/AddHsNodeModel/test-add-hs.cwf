@@ -1,0 +1,171 @@
+{
+    "id": "24d496c258668904613300eecdbd89377d61d697076f1f740b04c093ff809f2a",
+    "name": "/Users/L001418/Projects/Own/Project-Continuum/continuum-local-setup/docker/example-workflows/rdkit/02-modifiers/AddHsNodeModel/test-add-hs.cwf",
+    "active": false,
+    "nodes": [
+        {
+            "id": "1",
+            "type": "BaseNode",
+            "position": {
+                "x": 100,
+                "y": 200
+            },
+            "data": {
+                "id": "org.projectcontinuum.feature.base.analytics.node.CreateTableNodeModel",
+                "title": "Input Test Data",
+                "subTitle": "Molecules without explicit H",
+                "nodeModel": "org.projectcontinuum.feature.base.analytics.node.CreateTableNodeModel",
+                "inputs": null,
+                "outputs": {
+                    "data": {
+                        "name": "output table",
+                        "contentType": "application/octet-stream"
+                    }
+                },
+                "properties": {
+                    "jsonArrayString": "[\n  {\"smiles\": \"c1ccccc1\", \"name\": \"benzene\"},\n  {\"smiles\": \"O\", \"name\": \"water\"},\n  {\"smiles\": \"C\", \"name\": \"methane\"}\n]"
+                },
+                "description": "Input Test Data"
+            },
+            "width": 224,
+            "height": 100,
+            "selected": false,
+            "dragging": false
+        },
+        {
+            "id": "2",
+            "type": "BaseNode",
+            "position": {
+                "x": 400,
+                "y": 200
+            },
+            "data": {
+                "id": "org.projectcontinuum.feature.rdkit.node.AddHsNodeModel",
+                "title": "Add Hydrogens",
+                "subTitle": "Add explicit H atoms",
+                "nodeModel": "org.projectcontinuum.feature.rdkit.node.AddHsNodeModel",
+                "inputs": {
+                    "input": {
+                        "name": "input table",
+                        "contentType": "application/octet-stream"
+                    }
+                },
+                "outputs": {
+                    "output": {
+                        "name": "output table",
+                        "contentType": "application/octet-stream"
+                    }
+                },
+                "properties": {
+                    "smilesColumn": "smiles",
+                    "newColumnName": "smiles_with_hs",
+                    "removeSourceColumn": false
+                },
+                "description": "Add Hydrogens"
+            },
+            "width": 224,
+            "height": 100,
+            "selected": false,
+            "dragging": false
+        },
+        {
+            "id": "3",
+            "type": "BaseNode",
+            "position": {
+                "x": 100,
+                "y": 400
+            },
+            "data": {
+                "id": "org.projectcontinuum.feature.base.analytics.node.CreateTableNodeModel",
+                "title": "Expected Results",
+                "subTitle": "Expected SMILES with explicit H",
+                "nodeModel": "org.projectcontinuum.feature.base.analytics.node.CreateTableNodeModel",
+                "inputs": null,
+                "outputs": {
+                    "data": {
+                        "name": "output table",
+                        "contentType": "application/octet-stream"
+                    }
+                },
+                "properties": {
+                    "jsonArrayString": "[\n  {\"smiles\": \"c1ccccc1\", \"name\": \"benzene\", \"smiles_with_hs\": \"[H]c1c([H])c([H])c([H])c([H])c1[H]\"},\n  {\"smiles\": \"O\", \"name\": \"water\", \"smiles_with_hs\": \"[H]O[H]\"},\n  {\"smiles\": \"C\", \"name\": \"methane\", \"smiles_with_hs\": \"[H]C([H])([H])[H]\"}\n]"
+                },
+                "description": "Expected Results"
+            },
+            "width": 224,
+            "height": 100,
+            "selected": false,
+            "dragging": false
+        },
+        {
+            "id": "4",
+            "type": "BaseNode",
+            "position": {
+                "x": 700,
+                "y": 300
+            },
+            "data": {
+                "id": "org.projectcontinuum.feature.rdkit.node.SDFDifferenceCheckerNodeModel",
+                "title": "SDF Difference Checker",
+                "subTitle": "Verify H addition",
+                "nodeModel": "org.projectcontinuum.feature.rdkit.node.SDFDifferenceCheckerNodeModel",
+                "inputs": {
+                    "left": {
+                        "name": "left table",
+                        "contentType": "application/octet-stream"
+                    },
+                    "right": {
+                        "name": "right table",
+                        "contentType": "application/octet-stream"
+                    }
+                },
+                "outputs": {
+                    "output": {
+                        "name": "comparison results",
+                        "contentType": "application/octet-stream"
+                    }
+                },
+                "properties": {
+                    "leftSmilesColumn": "smiles_with_hs",
+                    "rightSmilesColumn": "smiles_with_hs",
+                    "compareCoordinates": false,
+                    "compareProperties": true,
+                    "outputDifferencesOnly": false,
+                    "differenceColumnName": "differences",
+                    "matchColumnName": "match_status"
+                },
+                "description": "SDF Difference Checker"
+            },
+            "width": 224,
+            "height": 123,
+            "selected": false,
+            "dragging": false
+        }
+    ],
+    "edges": [
+        {
+            "type": "BaseEdge",
+            "source": "1",
+            "sourceHandle": "data",
+            "target": "2",
+            "targetHandle": "input",
+            "id": "edge-1-2"
+        },
+        {
+            "type": "BaseEdge",
+            "source": "2",
+            "sourceHandle": "output",
+            "target": "4",
+            "targetHandle": "left",
+            "id": "edge-2-4"
+        },
+        {
+            "type": "BaseEdge",
+            "source": "3",
+            "sourceHandle": "data",
+            "target": "4",
+            "targetHandle": "right",
+            "id": "edge-3-4"
+        }
+    ]
+}

@@ -1,14 +1,14 @@
 {
-    "id": "a5a8ee9594c1537480826c7c253d1fe5e15066a785eb349279d4ffffce93ea59",
-    "name": "/Users/L001418/Projects/Own/Project-Continuum/continuum-local-setup/docker/example-workflows/RESTNode.cwf",
+    "id": "f2a91b4ea1bd50174c47f6e2cbc8e62bf7d755f852febfed1410e46047ff3def",
+    "name": "/Users/L001418/Projects/Own/Project-Continuum/continuum-local-setup/docker/example-workflows/creds-test.cwf",
     "active": false,
     "nodes": [
         {
-            "id": "24",
+            "id": "2",
             "type": "BaseNode",
             "position": {
-                "x": 482.79859619219434,
-                "y": 65.34724807827729
+                "x": 731.3891895954239,
+                "y": 197.43034085095314
             },
             "data": {
                 "id": "org.projectcontinuum.feature.base.analytics.node.RestNodeModel",
@@ -31,77 +31,150 @@
                     }
                 },
                 "properties": {
-                    "method": "GET",
-                    "url": "https://json-placeholder.mock.beeceptor.com/posts/${row.id}",
-                    "payload": ""
+                    "url": "https://posthook-api.mock.beeceptor.com/v1/hooks",
+                    "method": "POST",
+                    "payload": "{\n  \"severity\": \"critical\",\n  \"machine_id\": \"${row.machine_id}\",\n  \"sensor_type\": \"${row.sensor_type}\",\n  \"value\": ${row.value},\n  \"is_anomaly\": ${row.is_anomaly?string(\"true\", \"false\")},\n  \"batch_id\": ${row.batch_id},\n  \"timestamp\": \"${row.timestamp}\",\n  \"message\": \"Critical reading detected on ${row.machine_id}: ${row.sensor_type} = ${row.value}\"\n}",
+                    "authType": "Basic",
+                    "credential": "test-generic"
                 },
                 "propertiesSchema": {
                     "type": "object",
+                    "required": [
+                        "method",
+                        "url"
+                    ],
                     "properties": {
-                        "method": {
+                        "url": {
                             "type": "string",
-                            "title": "HTTP Method",
-                            "description": "HTTP method to use",
+                            "title": "URL Template",
+                            "description": "FreeMarker template for URL (e.g., https://api.example.com?id=${row.id})"
+                        },
+                        "method": {
                             "enum": [
                                 "GET",
                                 "POST",
                                 "PUT",
                                 "DELETE"
                             ],
-                            "default": "GET"
-                        },
-                        "url": {
                             "type": "string",
-                            "title": "URL Template",
-                            "description": "FreeMarker template for URL (e.g., https://api.example.com?id=${row.id})"
+                            "title": "HTTP Method",
+                            "default": "GET",
+                            "description": "HTTP method to use"
                         },
                         "payload": {
                             "type": "string",
                             "title": "Payload Template",
                             "description": "FreeMarker template for request body (e.g., {\"name\": \"${row.name}\"})"
+                        },
+                        "authType": {
+                            "enum": [
+                                "None",
+                                "Basic",
+                                "Token"
+                            ],
+                            "type": "string",
+                            "title": "Authentication Type",
+                            "default": "None",
+                            "enumNames": [
+                                "None",
+                                "Basic Authentication",
+                                "Bearer Token"
+                            ],
+                            "description": "Type of authentication to use"
+                        },
+                        "credential": {
+                            "type": "string",
+                            "title": "Credential",
+                            "description": "ID of the stored credential to use for authentication"
                         }
-                    },
-                    "required": [
-                        "method",
-                        "url"
-                    ]
+                    }
                 },
                 "propertiesUISchema": {
-                    "type": "VerticalLayout",
+                    "type": "Categorization",
                     "elements": [
                         {
-                            "type": "Control",
-                            "scope": "#/properties/method"
-                        },
-                        {
-                            "type": "Control",
-                            "scope": "#/properties/url",
-                            "options": {
-                                "format": "code",
-                                "language": "freemarker2",
-                                "rows": 1
-                            }
-                        },
-                        {
-                            "type": "Control",
-                            "scope": "#/properties/payload",
-                            "options": {
-                                "format": "code",
-                                "language": "freemarker2",
-                                "rows": 10
-                            },
-                            "rule": {
-                                "effect": "HIDE",
-                                "condition": {
-                                    "scope": "#/properties/method",
-                                    "schema": {
-                                        "enum": [
-                                            "GET",
-                                            "DELETE"
-                                        ]
+                            "type": "Category",
+                            "label": "Request",
+                            "elements": [
+                                {
+                                    "type": "Control",
+                                    "scope": "#/properties/method"
+                                },
+                                {
+                                    "type": "Control",
+                                    "scope": "#/properties/url",
+                                    "options": {
+                                        "rows": 1,
+                                        "format": "code",
+                                        "language": "freemarker2"
+                                    }
+                                },
+                                {
+                                    "rule": {
+                                        "effect": "HIDE",
+                                        "condition": {
+                                            "scope": "#/properties/method",
+                                            "schema": {
+                                                "enum": [
+                                                    "GET",
+                                                    "DELETE"
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    "type": "Control",
+                                    "scope": "#/properties/payload",
+                                    "options": {
+                                        "rows": 10,
+                                        "format": "code",
+                                        "language": "freemarker2"
                                     }
                                 }
-                            }
+                            ]
+                        },
+                        {
+                            "type": "Category",
+                            "label": "Authentication",
+                            "elements": [
+                                {
+                                    "type": "Control",
+                                    "scope": "#/properties/authType"
+                                },
+                                {
+                                    "rule": {
+                                        "effect": "SHOW",
+                                        "condition": {
+                                            "scope": "#/properties/authType",
+                                            "schema": {
+                                                "const": "Basic"
+                                            }
+                                        }
+                                    },
+                                    "type": "Control",
+                                    "scope": "#/properties/credential",
+                                    "options": {
+                                        "format": "credential",
+                                        "credentialType": "GENERIC"
+                                    }
+                                },
+                                {
+                                    "rule": {
+                                        "effect": "SHOW",
+                                        "condition": {
+                                            "scope": "#/properties/authType",
+                                            "schema": {
+                                                "const": "Token"
+                                            }
+                                        }
+                                    },
+                                    "type": "Control",
+                                    "scope": "#/properties/credential",
+                                    "options": {
+                                        "format": "credential",
+                                        "credentialType": "GENERIC"
+                                    }
+                                }
+                            ]
                         }
                     ]
                 },
@@ -113,16 +186,16 @@
             "selected": false,
             "dragging": false,
             "positionAbsolute": {
-                "x": 482.79859619219434,
-                "y": 65.34724807827729
+                "x": 731.3891895954239,
+                "y": 197.43034085095314
             }
         },
         {
-            "id": "23",
+            "id": "3",
             "type": "BaseNode",
             "position": {
-                "x": 105.00012339858978,
-                "y": 55.379354259852136
+                "x": 309.3913538167195,
+                "y": 202.43357569965252
             },
             "data": {
                 "id": "org.projectcontinuum.feature.base.analytics.node.CreateTableNodeModel",
@@ -177,19 +250,19 @@
             "selected": false,
             "dragging": false,
             "positionAbsolute": {
-                "x": 105.00012339858978,
-                "y": 55.379354259852136
+                "x": 309.3913538167195,
+                "y": 202.43357569965252
             }
         }
     ],
     "edges": [
         {
             "type": "BaseEdge",
-            "source": "23",
+            "source": "3",
             "sourceHandle": "data",
-            "target": "24",
+            "target": "2",
             "targetHandle": "data",
-            "id": "reactflow__edge-23data-24data"
+            "id": "reactflow__edge-3data-2data"
         }
     ]
 }

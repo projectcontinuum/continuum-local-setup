@@ -1,0 +1,207 @@
+{
+    "id": "test-one-component-reaction-001",
+    "name": "Test One Component Reaction Node",
+    "active": false,
+    "nodes": [
+        {
+            "id": "1",
+            "type": "BaseNode",
+            "position": {
+                "x": 100,
+                "y": 150
+            },
+            "data": {
+                "id": "org.projectcontinuum.feature.base.analytics.node.CreateTableNodeModel",
+                "title": "Input Molecules",
+                "nodeModel": "org.projectcontinuum.feature.base.analytics.node.CreateTableNodeModel",
+                "inputs": null,
+                "outputs": {
+                    "data": {
+                        "name": "output table",
+                        "contentType": "application/octet-stream"
+                    }
+                },
+                "properties": {
+                    "jsonArrayString": "[\n  {\"smiles\": \"c1ccc(N)cc1\", \"name\": \"aniline\"},\n  {\"smiles\": \"CCN\", \"name\": \"ethylamine\"}\n]"
+                },
+                "description": "Input Molecules"
+            },
+            "width": 224,
+            "height": 100,
+            "selected": false,
+            "dragging": false
+        },
+        {
+            "id": "2",
+            "type": "BaseNode",
+            "position": {
+                "x": 100,
+                "y": 350
+            },
+            "data": {
+                "id": "org.projectcontinuum.feature.base.analytics.node.CreateTableNodeModel",
+                "title": "Reaction SMARTS",
+                "nodeModel": "org.projectcontinuum.feature.base.analytics.node.CreateTableNodeModel",
+                "inputs": null,
+                "outputs": {
+                    "data": {
+                        "name": "output table",
+                        "contentType": "application/octet-stream"
+                    }
+                },
+                "properties": {
+                    "jsonArrayString": "[\n  {\"rxn_smarts\": \"[N:1]>>[N:1]C(=O)C\", \"name\": \"acetylation\"}\n]"
+                },
+                "description": "Reaction SMARTS"
+            },
+            "width": 224,
+            "height": 100,
+            "selected": false,
+            "dragging": false
+        },
+        {
+            "id": "3",
+            "type": "BaseNode",
+            "position": {
+                "x": 400,
+                "y": 250
+            },
+            "data": {
+                "id": "org.projectcontinuum.feature.rdkit.node.OneComponentReactionNodeModel",
+                "title": "One Component Reaction",
+                "subTitle": "Run chemical reaction",
+                "nodeModel": "org.projectcontinuum.feature.rdkit.node.OneComponentReactionNodeModel",
+                "inputs": {
+                    "reactant": {
+                        "name": "reactant table",
+                        "contentType": "application/octet-stream"
+                    },
+                    "reaction": {
+                        "name": "reaction table",
+                        "contentType": "application/octet-stream"
+                    }
+                },
+                "outputs": {
+                    "output": {
+                        "name": "output table",
+                        "contentType": "application/octet-stream"
+                    }
+                },
+                "properties": {
+                    "reactantSmilesColumn": "smiles",
+                    "reactionSmartsColumn": "rxn_smarts",
+                    "productColumnName": "product_smiles",
+                    "productIndexColumnName": "product_index"
+                },
+                "description": "One Component Reaction"
+            },
+            "width": 224,
+            "height": 100,
+            "selected": false,
+            "dragging": false
+        },
+        {
+            "id": "4",
+            "type": "BaseNode",
+            "position": {
+                "x": 100,
+                "y": 500
+            },
+            "data": {
+                "id": "org.projectcontinuum.feature.base.analytics.node.CreateTableNodeModel",
+                "title": "Expected Results",
+                "nodeModel": "org.projectcontinuum.feature.base.analytics.node.CreateTableNodeModel",
+                "inputs": null,
+                "outputs": {
+                    "data": {
+                        "name": "output table",
+                        "contentType": "application/octet-stream"
+                    }
+                },
+                "properties": {
+                    "jsonArrayString": "[\n  {\"smiles\": \"c1ccc(N)cc1\", \"name\": \"aniline\"},\n  {\"smiles\": \"CCN\", \"name\": \"ethylamine\"}\n]"
+                },
+                "description": "Expected Results"
+            },
+            "width": 224,
+            "height": 100,
+            "selected": false,
+            "dragging": false
+        },
+        {
+            "id": "5",
+            "type": "BaseNode",
+            "position": {
+                "x": 700,
+                "y": 350
+            },
+            "data": {
+                "id": "org.projectcontinuum.feature.rdkit.node.SDFDifferenceCheckerNodeModel",
+                "title": "SDF Difference Checker",
+                "nodeModel": "org.projectcontinuum.feature.rdkit.node.SDFDifferenceCheckerNodeModel",
+                "inputs": {
+                    "left": {
+                        "name": "left table",
+                        "contentType": "application/octet-stream"
+                    },
+                    "right": {
+                        "name": "right table",
+                        "contentType": "application/octet-stream"
+                    }
+                },
+                "outputs": {
+                    "output": {
+                        "name": "comparison results",
+                        "contentType": "application/octet-stream"
+                    }
+                },
+                "properties": {
+                    "leftSmilesColumn": "smiles",
+                    "rightSmilesColumn": "smiles",
+                    "compareCoordinates": false,
+                    "compareProperties": true,
+                    "outputDifferencesOnly": false
+                },
+                "description": "SDF Difference Checker"
+            },
+            "width": 224,
+            "height": 100,
+            "selected": false,
+            "dragging": false
+        }
+    ],
+    "edges": [
+        {
+            "type": "BaseEdge",
+            "source": "1",
+            "sourceHandle": "data",
+            "target": "3",
+            "targetHandle": "reactant",
+            "id": "edge-1-3"
+        },
+        {
+            "type": "BaseEdge",
+            "source": "2",
+            "sourceHandle": "data",
+            "target": "3",
+            "targetHandle": "reaction",
+            "id": "edge-2-3"
+        },
+        {
+            "type": "BaseEdge",
+            "source": "3",
+            "sourceHandle": "output",
+            "target": "5",
+            "targetHandle": "left",
+            "id": "edge-3-5"
+        },
+        {
+            "type": "BaseEdge",
+            "source": "4",
+            "sourceHandle": "data",
+            "target": "5",
+            "targetHandle": "right",
+            "id": "edge-4-5"
+        }
+    ]
+}

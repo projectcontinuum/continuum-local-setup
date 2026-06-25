@@ -1,0 +1,250 @@
+{
+    "id": "test-two-component-reaction-001",
+    "name": "Test Two Component Reaction Node",
+    "active": false,
+    "nodes": [
+        {
+            "id": "1",
+            "type": "BaseNode",
+            "position": {
+                "x": 100,
+                "y": 100
+            },
+            "data": {
+                "id": "org.projectcontinuum.feature.base.analytics.node.CreateTableNodeModel",
+                "title": "Reactant 1 (Amines)",
+                "nodeModel": "org.projectcontinuum.feature.base.analytics.node.CreateTableNodeModel",
+                "inputs": null,
+                "outputs": {
+                    "data": {
+                        "name": "output table",
+                        "contentType": "application/octet-stream"
+                    }
+                },
+                "properties": {
+                    "jsonArrayString": "[\n  {\"amine\": \"c1ccc(N)cc1\", \"name\": \"aniline\"},\n  {\"amine\": \"CCN\", \"name\": \"ethylamine\"}\n]"
+                },
+                "description": "Reactant 1 (Amines)"
+            },
+            "width": 224,
+            "height": 100,
+            "selected": false,
+            "dragging": false
+        },
+        {
+            "id": "2",
+            "type": "BaseNode",
+            "position": {
+                "x": 100,
+                "y": 300
+            },
+            "data": {
+                "id": "org.projectcontinuum.feature.base.analytics.node.CreateTableNodeModel",
+                "title": "Reactant 2 (Acids)",
+                "nodeModel": "org.projectcontinuum.feature.base.analytics.node.CreateTableNodeModel",
+                "inputs": null,
+                "outputs": {
+                    "data": {
+                        "name": "output table",
+                        "contentType": "application/octet-stream"
+                    }
+                },
+                "properties": {
+                    "jsonArrayString": "[\n  {\"acid\": \"CC(=O)O\", \"name\": \"acetic_acid\"},\n  {\"acid\": \"c1ccccc1C(=O)O\", \"name\": \"benzoic_acid\"}\n]"
+                },
+                "description": "Reactant 2 (Acids)"
+            },
+            "width": 224,
+            "height": 100,
+            "selected": false,
+            "dragging": false
+        },
+        {
+            "id": "3",
+            "type": "BaseNode",
+            "position": {
+                "x": 100,
+                "y": 500
+            },
+            "data": {
+                "id": "org.projectcontinuum.feature.base.analytics.node.CreateTableNodeModel",
+                "title": "Reaction SMARTS",
+                "nodeModel": "org.projectcontinuum.feature.base.analytics.node.CreateTableNodeModel",
+                "inputs": null,
+                "outputs": {
+                    "data": {
+                        "name": "output table",
+                        "contentType": "application/octet-stream"
+                    }
+                },
+                "properties": {
+                    "jsonArrayString": "[\n  {\"rxn_smarts\": \"[N:1].[C:2](=O)[OH]>>[N:1][C:2]=O\", \"name\": \"amide_formation\"}\n]"
+                },
+                "description": "Reaction SMARTS"
+            },
+            "width": 224,
+            "height": 100,
+            "selected": false,
+            "dragging": false
+        },
+        {
+            "id": "4",
+            "type": "BaseNode",
+            "position": {
+                "x": 450,
+                "y": 300
+            },
+            "data": {
+                "id": "org.projectcontinuum.feature.rdkit.node.TwoComponentReactionNodeModel",
+                "title": "Two Component Reaction",
+                "subTitle": "Run two-component reaction",
+                "nodeModel": "org.projectcontinuum.feature.rdkit.node.TwoComponentReactionNodeModel",
+                "inputs": {
+                    "reactant1": {
+                        "name": "reactant1 table",
+                        "contentType": "application/octet-stream"
+                    },
+                    "reactant2": {
+                        "name": "reactant2 table",
+                        "contentType": "application/octet-stream"
+                    },
+                    "reaction": {
+                        "name": "reaction table",
+                        "contentType": "application/octet-stream"
+                    }
+                },
+                "outputs": {
+                    "output": {
+                        "name": "output table",
+                        "contentType": "application/octet-stream"
+                    }
+                },
+                "properties": {
+                    "reactant1SmilesColumn": "amine",
+                    "reactant2SmilesColumn": "acid",
+                    "reactionSmartsColumn": "rxn_smarts",
+                    "matrixExpansion": false,
+                    "productColumnName": "product_smiles",
+                    "productIndexColumnName": "product_index",
+                    "includeReactantColumns": true
+                },
+                "description": "Two Component Reaction"
+            },
+            "width": 224,
+            "height": 100,
+            "selected": false,
+            "dragging": false
+        },
+        {
+            "id": "5",
+            "type": "BaseNode",
+            "position": {
+                "x": 100,
+                "y": 700
+            },
+            "data": {
+                "id": "org.projectcontinuum.feature.base.analytics.node.CreateTableNodeModel",
+                "title": "Expected Results",
+                "nodeModel": "org.projectcontinuum.feature.base.analytics.node.CreateTableNodeModel",
+                "inputs": null,
+                "outputs": {
+                    "data": {
+                        "name": "output table",
+                        "contentType": "application/octet-stream"
+                    }
+                },
+                "properties": {
+                    "jsonArrayString": "[\n  {\"amine\": \"c1ccc(N)cc1\", \"acid\": \"CC(=O)O\"},\n  {\"amine\": \"CCN\", \"acid\": \"c1ccccc1C(=O)O\"}\n]"
+                },
+                "description": "Expected Results"
+            },
+            "width": 224,
+            "height": 100,
+            "selected": false,
+            "dragging": false
+        },
+        {
+            "id": "6",
+            "type": "BaseNode",
+            "position": {
+                "x": 750,
+                "y": 400
+            },
+            "data": {
+                "id": "org.projectcontinuum.feature.rdkit.node.SDFDifferenceCheckerNodeModel",
+                "title": "SDF Difference Checker",
+                "nodeModel": "org.projectcontinuum.feature.rdkit.node.SDFDifferenceCheckerNodeModel",
+                "inputs": {
+                    "left": {
+                        "name": "left table",
+                        "contentType": "application/octet-stream"
+                    },
+                    "right": {
+                        "name": "right table",
+                        "contentType": "application/octet-stream"
+                    }
+                },
+                "outputs": {
+                    "output": {
+                        "name": "comparison results",
+                        "contentType": "application/octet-stream"
+                    }
+                },
+                "properties": {
+                    "leftSmilesColumn": "amine",
+                    "rightSmilesColumn": "amine",
+                    "compareCoordinates": false,
+                    "compareProperties": true,
+                    "outputDifferencesOnly": false
+                },
+                "description": "SDF Difference Checker"
+            },
+            "width": 224,
+            "height": 100,
+            "selected": false,
+            "dragging": false
+        }
+    ],
+    "edges": [
+        {
+            "type": "BaseEdge",
+            "source": "1",
+            "sourceHandle": "data",
+            "target": "4",
+            "targetHandle": "reactant1",
+            "id": "edge-1-4"
+        },
+        {
+            "type": "BaseEdge",
+            "source": "2",
+            "sourceHandle": "data",
+            "target": "4",
+            "targetHandle": "reactant2",
+            "id": "edge-2-4"
+        },
+        {
+            "type": "BaseEdge",
+            "source": "3",
+            "sourceHandle": "data",
+            "target": "4",
+            "targetHandle": "reaction",
+            "id": "edge-3-4"
+        },
+        {
+            "type": "BaseEdge",
+            "source": "4",
+            "sourceHandle": "output",
+            "target": "6",
+            "targetHandle": "left",
+            "id": "edge-4-6"
+        },
+        {
+            "type": "BaseEdge",
+            "source": "5",
+            "sourceHandle": "data",
+            "target": "6",
+            "targetHandle": "right",
+            "id": "edge-5-6"
+        }
+    ]
+}
